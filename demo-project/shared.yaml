@@ -1,0 +1,17 @@
+openapi: 3.1.1
+info:
+  title: Zoo Shared Types
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    Animal:
+      type: object
+      required: [name, enclosure]
+      properties:
+        name:
+          type: string
+        enclosure:
+          type: string
+      discriminator:
+        propertyName: name

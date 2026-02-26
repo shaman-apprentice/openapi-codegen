@@ -1,0 +1,27 @@
+openapi: 3.1.1
+info:
+  title: Zoo Terrestrial Animals API
+  version: 1.0.0
+paths:
+  /chameleon:
+    get:
+      responses:
+        '200':
+          description: A chameleon
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chameleon'
+components:
+  schemas:
+    Chameleon:
+      allOf:
+        - $ref: './shared.yaml#/components/schemas/Animal'
+        - type: object
+          required: [camouflageLevel]
+          properties:
+            name:
+              type: string
+              enum: [chameleon]
+            camouflageLevel:
+              type: integer

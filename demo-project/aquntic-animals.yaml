@@ -1,0 +1,27 @@
+openapi: 3.1.1
+info:
+  title: Zoo Aquatic Animals API
+  version: 1.0.0
+paths:
+  /rainbowfish:
+    get:
+      responses:
+        '200':
+          description: A rainbowfish
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rainbowfish'
+components:
+  schemas:
+    Rainbowfish:
+      allOf:
+        - $ref: './shared.yaml#/components/schemas/Animal'
+        - type: object
+          required: [mainColor]
+          properties:
+            name:
+              type: string
+              enum: [rainbowfish]
+            mainColor:
+              type: string
