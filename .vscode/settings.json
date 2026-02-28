@@ -3,5 +3,6 @@
 	"chat.tools.terminal.autoApprove": {
 		"java": true,
 		"mvn clean": true
-	}
+	},
+	 "js/ts.implicitProjectConfig.checkJs": true
 }

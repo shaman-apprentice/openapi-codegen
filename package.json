@@ -1,0 +1,41 @@
+{
+  "name": "@shaman-apprentice/openapi-angular-servlet-contract",
+  "version": "0.0.1",
+  "description": "Create a contract between your TypeScript frontend and Java backend with openapi",
+  "type": "module",
+  "bin": {
+    "generate-angular-contract": "./bin/generate-angular-contract.mjs",
+    "generate-servlet-contract": "./bin/generate-servlet-contract.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "prepublishOnly": "npm run test"
+  },
+  "keywords": [
+    "i18n",
+    "sync",
+    "automation"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shaman-apprentice/i18n-parrot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shaman-apprentice/i18n-parrot/issues"
+  },
+  "homepage": "https://github.com/shaman-apprentice/i18n-parrot#readme",
+  "engines": {
+    "node": ">=24"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
