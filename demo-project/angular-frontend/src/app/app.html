@@ -1,0 +1,27 @@
+<div class="container">
+  <aside class="sidebar">
+    <h1>Zoo API Routes</h1>
+    @for (route of routes; track route.path) {
+      <button (click)="callRoute(route)" [disabled]="loading()">
+        <span class="method">{{ route.method }}</span>
+        <span class="path">{{ route.path }}</span>
+      </button>
+    }
+  </aside>
+
+  <main class="content">
+    <h2>Response</h2>
+    @if (loading()) {
+      <div class="status">Loading...</div>
+    }
+    @if (error()) {
+      <pre class="error">{{ error() }}</pre>
+    }
+    @if (response() && !loading()) {
+      <pre class="response">{{ response() }}</pre>
+    }
+    @if (!response() && !loading() && !error()) {
+      <div class="status">Click a route to see the response</div>
+    }
+  </main>
+</div>
