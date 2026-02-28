@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.zoo</groupId>
+	<artifactId>zoo-parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Zoo API Parent</name>
+	<description>Demo project for OpenAPI codegen with nice polymorphism support</description>
+
+	<modules>
+		<module>shared-lib</module>
+		<module>aquatic-lib</module>
+		<module>terrestrial-lib</module>
+		<module>server</module>
+	</modules>
+
+	<properties>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<openapi-generator.version>7.2.0</openapi-generator.version>
+		<jackson.version>2.21.1</jackson.version>
+		<jakarta.validation.version>3.0.2</jakarta.validation.version>
+		<jakarta.annotation.version>2.1.1</jakarta.annotation.version>
+		<swagger.version>2.2.43</swagger.version>
+		<jetty.version>12.1.6</jetty.version>
+		<jersey.version>3.1.11</jersey.version>
+		<swagger-ui.version>5.10.3</swagger-ui.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Jackson BOM for version alignment across all Jackson modules -->
+			<dependency>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-bom</artifactId>
+				<version>${jackson.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>jakarta.validation</groupId>
+				<artifactId>jakarta.validation-api</artifactId>
+				<version>${jakarta.validation.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>jakarta.annotation</groupId>
+				<artifactId>jakarta.annotation-api</artifactId>
+				<version>${jakarta.annotation.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-annotations-jakarta</artifactId>
+				<version>${swagger.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.zoo</groupId>
+				<artifactId>shared-lib</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.zoo</groupId>
+				<artifactId>aquatic-lib</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.zoo</groupId>
+				<artifactId>terrestrial-lib</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.openapitools</groupId>
+					<artifactId>openapi-generator-maven-plugin</artifactId>
+					<version>${openapi-generator.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.12.1</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

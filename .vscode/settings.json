@@ -1,0 +1,7 @@
+{
+	"java.configuration.updateBuildConfiguration": "interactive",
+	"chat.tools.terminal.autoApprove": {
+		"java": true,
+		"mvn clean": true
+	}
+}

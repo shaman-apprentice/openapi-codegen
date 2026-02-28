@@ -1,0 +1,6 @@
+com\zoo\server\JacksonConfig.class
+com\zoo\server\resource\TerrestrialResource.class
+com\zoo\server\resource\SwaggerUIResource.class
+com\zoo\server\ZooServer.class
+com\zoo\server\ZooApplication.class
+com\zoo\server\resource\AquaticResource.class

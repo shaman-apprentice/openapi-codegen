@@ -16,7 +16,7 @@ components:
   schemas:
     Rainbowfish:
       allOf:
-        - $ref: './shared.yaml#/components/schemas/Animal'
+        - $ref: '../shared-lib/shared.yaml#/components/schemas/Animal'
         - type: object
           required: [mainColor]
           properties:
