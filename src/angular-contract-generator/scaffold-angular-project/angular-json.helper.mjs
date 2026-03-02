@@ -26,7 +26,7 @@ export function angularJsonContent(packageName) {
 						}
 					},
 					"defaultConfiguration": "production"
-				},
+				}
 			}
 		}
 	}

@@ -8,18 +8,18 @@ export function rootPackageJsonContent(packageName, majorAngularVersion) {
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"build": "ng build ${packageName} 
-	}
+		"build": "ng build ${packageName}"
+	},
 	"dependencies": {
 		"@angular/common": "^${majorAngularVersion}.0.0",
     "@angular/compiler": "^${majorAngularVersion}.0.0",
-    "@angular/core": "^${majorAngularVersion}.0.0",
+    "@angular/core": "^${majorAngularVersion}.0.0"
 	},
 	"devDependencies": {
 		"@angular/build": "^${majorAngularVersion}.0.0",
     "@angular/cli": "^${majorAngularVersion}.0.0",
     "@angular/compiler-cli": "^${majorAngularVersion}.0.0",
-		"ng-packagr": "^${majorAngularVersion}.0.0",
+		"ng-packagr": "^${majorAngularVersion}.0.0"
 	}
 }`;
 }
