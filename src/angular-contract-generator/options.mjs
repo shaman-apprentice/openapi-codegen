@@ -5,6 +5,7 @@ export const OptionsDefinition = {
     input: { type: "string",  short: "i", required: true, helpMsg: "Path to openapi yaml spec file" },
     name: { type: "string",  short: "n", required: true, helpMsg: "Name of generated npm package" },
     output: { type: "string", short: "o", required: true, helpMsg: "Path to output folder of generated angular client"},
+    majorAngularVersion: { type: "string", short: "a", default: "21", helpMsg: "Major Angular version like '21'"},
   },
   strict: true,
 };

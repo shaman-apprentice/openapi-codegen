@@ -35,7 +35,13 @@
   "engines": {
     "node": ">=24"
   },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9"
   }
 }
