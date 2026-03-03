@@ -35,8 +35,11 @@ export class ContractGenerator {
 		await writeFile(join(this.getLibPath(), 'src', 'model.ts'), modelContent(spec.components.schemas));
 
 		// generate client
-		// generate public-api.ts
 
+		await writeFile(join(this.getLibPath(), 'src', 'public-api.ts'), `
+	export * from './model';
+	// export { contract } from './angular.client';
+`		);
 	}
 
 	getLibPath() {

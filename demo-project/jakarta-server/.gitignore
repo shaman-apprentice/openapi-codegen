@@ -5,3 +5,6 @@ target/
 .classpath
 .project
 *.class
+shared-lib/node/
+aquatic-lib/node/
+terrestrial-lib/node/

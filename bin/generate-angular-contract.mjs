@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { parseArgs } from "node:util";
 import { OptionsDefinition } from "../src/angular-contract-generator/options.mjs";
 import { areOptionsValid, printHelp } from "../src/supporting/options.helper.mjs";

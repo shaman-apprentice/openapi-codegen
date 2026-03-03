@@ -62,7 +62,12 @@
               "buildTarget": "angular-frontend:build:production"
             },
             "development": {
-              "buildTarget": "angular-frontend:build:development"
+              "buildTarget": "angular-frontend:build:development",
+              "prebundle": {
+                "exclude": [
+                  "@zoo/shared-lib"
+                ]
+              }
             }
           },
           "defaultConfiguration": "development"
