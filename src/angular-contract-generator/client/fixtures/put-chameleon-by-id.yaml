@@ -1,0 +1,13 @@
+/chameleon/{id}:
+  put:
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Chameleon'
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chameleon'

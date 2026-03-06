@@ -1,0 +1,5 @@
+/trigger:
+  post:
+    responses:
+      '200':
+        description: Triggered

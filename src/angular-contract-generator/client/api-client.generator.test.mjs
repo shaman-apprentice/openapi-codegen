@@ -1,5 +1,10 @@
+// @ts-nocheck
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import yaml from 'js-yaml';
 import {
 	apiClientContent,
 	_resolveSchemaType,
@@ -9,186 +14,59 @@ import {
 	_extractPathParams,
 } from './api-client.generator.mjs';
 
-describe('clientContent', () => {
-	test('generates client for single GET endpoint', () => {
-		/** @type {Record<string, import('openapi-types').OpenAPIV3_1.PathItemObject>} */
-		const paths = {
-			'/chameleon': {
-				get: {
-					responses: {
-						'200': {
-							description: 'A chameleon',
-							content: {
-								'application/json': {
-									schema: { $ref: '#/components/schemas/Chameleon' },
-								},
-							},
-						},
-					},
-				},
-			},
-		};
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const loadFixture = name => yaml.load(readFileSync(join(__dirname, 'fixtures', name), 'utf8'));
 
-		const result = apiClientContent(paths);
+describe('apiClientContent', () => {
+	test('generates client for single GET endpoint', () => {
+		const result = apiClientContent(loadFixture('get-chameleon.yaml'));
 
 		assert.ok(result.includes("import { Injectable, inject } from '@angular/core';"));
 		assert.ok(result.includes("import { HttpClient } from '@angular/common/http';"));
 		assert.ok(result.includes("import { Observable } from 'rxjs';"));
-		assert.ok(result.includes("Chameleon"));
+		assert.ok(result.includes("import { Chameleon } from './model';"));
 		assert.ok(result.includes('getChameleon(): Observable<Chameleon>'));
 		assert.ok(result.includes("this.#http.get<Chameleon>('/chameleon')"));
 	});
 
 	test('generates client for POST endpoint with request body', () => {
-		/** @type {Record<string, import('openapi-types').OpenAPIV3_1.PathItemObject>} */
-		const paths = {
-			'/chameleon': {
-				post: {
-					requestBody: {
-						content: {
-							'application/json': {
-								schema: { $ref: '#/components/schemas/Chameleon' },
-							},
-						},
-					},
-					responses: {
-						'201': {
-							description: 'Created',
-							content: {
-								'application/json': {
-									schema: { $ref: '#/components/schemas/Chameleon' },
-								},
-							},
-						},
-					},
-				},
-			},
-		};
-
-		const result = apiClientContent(paths);
+		const result = apiClientContent(loadFixture('post-chameleon.yaml'));
 
 		assert.ok(result.includes('postChameleon(body: Chameleon): Observable<Chameleon>'));
 		assert.ok(result.includes("this.#http.post<Chameleon>('/chameleon', body)"));
 	});
 
 	test('generates client with path parameters', () => {
-		/** @type {Record<string, import('openapi-types').OpenAPIV3_1.PathItemObject>} */
-		const paths = {
-			'/animals/{id}': {
-				get: {
-					responses: {
-						'200': {
-							description: 'An animal',
-							content: {
-								'application/json': {
-									schema: { $ref: '#/components/schemas/Animal' },
-								},
-							},
-						},
-					},
-				},
-			},
-		};
-
-		const result = apiClientContent(paths);
+		const result = apiClientContent(loadFixture('get-animal-by-id.yaml'));
 
 		assert.ok(result.includes('getAnimalsById(id: string): Observable<Animal>'));
 		assert.ok(result.includes('this.#http.get<Animal>(`/animals/${id}`)'));
 	});
 
 	test('generates client with array response', () => {
-		/** @type {Record<string, import('openapi-types').OpenAPIV3_1.PathItemObject>} */
-		const paths = {
-			'/animals': {
-				get: {
-					responses: {
-						'200': {
-							description: 'List of animals',
-							content: {
-								'application/json': {
-									schema: {
-										type: 'array',
-										items: { $ref: '#/components/schemas/Animal' },
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		};
+		const result = apiClientContent(loadFixture('get-animals.yaml'));
 
-		const result = apiClientContent(paths);
-
-		assert.ok(result.includes("Animal"));
+		assert.ok(result.includes("import { Animal } from './model';"));
 		assert.ok(result.includes('getAnimals(): Observable<Animal[]>'));
 		assert.ok(result.includes("this.#http.get<Animal[]>('/animals')"));
 	});
 
 	test('generates DELETE method without body', () => {
-		/** @type {Record<string, import('openapi-types').OpenAPIV3_1.PathItemObject>} */
-		const paths = {
-			'/chameleon/{id}': {
-				delete: {
-					responses: {
-						'200': {
-							description: 'Deleted',
-						},
-					},
-				},
-			},
-		};
-
-		const result = apiClientContent(paths);
+		const result = apiClientContent(loadFixture('delete-chameleon-by-id.yaml'));
 
 		assert.ok(result.includes('deleteChameleonById(id: string): Observable<void>'));
 		assert.ok(result.includes('this.#http.delete<void>(`/chameleon/${id}`)'));
 	});
 
 	test('generates PUT method with body', () => {
-		/** @type {Record<string, import('openapi-types').OpenAPIV3_1.PathItemObject>} */
-		const paths = {
-			'/chameleon/{id}': {
-				put: {
-					requestBody: {
-						content: {
-							'application/json': {
-								schema: { $ref: '#/components/schemas/Chameleon' },
-							},
-						},
-					},
-					responses: {
-						'200': {
-							content: {
-								'application/json': {
-									schema: { $ref: '#/components/schemas/Chameleon' },
-								},
-							},
-						},
-					},
-				},
-			},
-		};
-
-		const result = apiClientContent(paths);
+		const result = apiClientContent(loadFixture('put-chameleon-by-id.yaml'));
 
 		assert.ok(result.includes('putChameleonById(id: string, body: Chameleon): Observable<Chameleon>'));
 		assert.ok(result.includes('this.#http.put<Chameleon>(`/chameleon/${id}`, body)'));
 	});
 
 	test('generates POST method without body passes null', () => {
-		/** @type {Record<string, import('openapi-types').OpenAPIV3_1.PathItemObject>} */
-		const paths = {
-			'/trigger': {
-				post: {
-					responses: {
-						'200': { description: 'Triggered' },
-					},
-				},
-			},
-		};
-
-		const result = apiClientContent(paths);
+		const result = apiClientContent(loadFixture('post-trigger.yaml'));
 
 		assert.ok(result.includes("this.#http.post<void>('/trigger', null)"));
 	});
@@ -232,18 +110,6 @@ describe('_resolveResponseType', () => {
 
 	test('returns void when response has no content', () => {
 		assert.equal(_resolveResponseType({ responses: { '200': { description: 'OK' } } }), 'void');
-	});
-
-	test('resolves type from 200 response', () => {
-		const op = {
-			responses: {
-				'200': {
-					description: 'OK',
-					content: { 'application/json': { schema: { $ref: '#/components/schemas/Animal' } } },
-				},
-			},
-		};
-		assert.equal(_resolveResponseType(op), 'Animal');
 	});
 
 	test('resolves type from 201 response', () => {

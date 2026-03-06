@@ -1,0 +1,5 @@
+/chameleon/{id}:
+  delete:
+    responses:
+      '200':
+        description: Deleted

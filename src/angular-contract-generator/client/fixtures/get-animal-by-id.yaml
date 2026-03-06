@@ -1,0 +1,9 @@
+/animals/{id}:
+  get:
+    responses:
+      '200':
+        description: An animal
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Animal'

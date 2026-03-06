@@ -1,0 +1,9 @@
+/chameleon:
+  get:
+    responses:
+      '200':
+        description: A chameleon
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chameleon'

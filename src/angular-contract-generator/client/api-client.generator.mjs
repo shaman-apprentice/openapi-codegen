@@ -42,9 +42,7 @@ export function apiClientContent(paths) {
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import {
-  ${[...modelsToImport].join(',\n')}
-} from './model'; 
+import { ${[...modelsToImport].join(', ')} } from './model'; 
 
 @Injectable({ providedIn: 'root' })
 export class ApiClient {

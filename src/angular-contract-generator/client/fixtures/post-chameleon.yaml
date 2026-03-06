@@ -1,0 +1,14 @@
+/chameleon:
+  post:
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Chameleon'
+    responses:
+      '201':
+        description: Created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chameleon'
