@@ -36,7 +36,8 @@ export function libPackageJsonContent(packageName, packageVersion, majorAngularV
 	"sideEffects": false,
 	"peerDependencies": {
 		"@angular/common": "^${majorAngularVersion}.0.0",
-    "@angular/core": "^${majorAngularVersion}.0.0"
+    "@angular/core": "^${majorAngularVersion}.0.0",
+		"rxjs": "^7.8.2"
 	},
 	"dependencies": {
 		"tslib": "^2.8.1"

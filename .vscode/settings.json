@@ -2,7 +2,11 @@
 	"java.configuration.updateBuildConfiguration": "interactive",
 	"chat.tools.terminal.autoApprove": {
 		"java": true,
-		"mvn clean": true
+		"mvn clean": true,
+		"/^node --test/": {
+			"approve": true,
+			"matchCommandLine": true
+		}
 	},
 	 "js/ts.implicitProjectConfig.checkJs": true
 }

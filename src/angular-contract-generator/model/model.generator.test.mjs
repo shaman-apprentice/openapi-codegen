@@ -1,6 +1,6 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { modelContent, _createRegistry } from './model.helper.mjs';
+import { modelContent, _createRegistry } from './model.generator.mjs';
 
 describe('modelContent', () => {
   test('generates model.ts content from simple schemas', () => {

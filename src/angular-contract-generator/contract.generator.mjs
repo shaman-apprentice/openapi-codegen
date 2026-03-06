@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import * as yaml from 'js-yaml';
 import { scaffoldAngularProject } from './scaffold-angular-project/scaffold-angular-project.mjs';
 import { writeFile } from 'node:fs/promises';
-import { modelContent } from './model/model.helper.mjs';
+import { modelContent } from './model/model.generator.mjs';
+import { apiClientContent } from './client/api-client.generator.mjs';
 
 export class ContractGenerator {
 	pathToInputSpec = '';
@@ -32,14 +33,17 @@ export class ContractGenerator {
 			this.contractVersion = spec.info.version;
 
 		await scaffoldAngularProject(this);
-		await writeFile(join(this.getLibPath(), 'src', 'model.ts'), modelContent(spec.components.schemas));
 
-		// generate client
+		const publicApiExports = [
+			`export { ApiClient } from './angular.client';`,
+			`export * from './model';`,
+		];
 
-		await writeFile(join(this.getLibPath(), 'src', 'public-api.ts'), `
-	export * from './model';
-	// export { contract } from './angular.client';
-`		);
+		await Promise.all([
+			writeFile(join(this.getLibPath(), 'src', 'angular.client.ts'), apiClientContent(spec.paths || {})),
+			writeFile(join(this.getLibPath(), 'src', 'model.ts'), modelContent(spec.components.schemas)),
+			writeFile(join(this.getLibPath(), 'src', 'public-api.ts'), publicApiExports.join('\n') + '\n'),
+		]);
 	}
 
 	getLibPath() {
