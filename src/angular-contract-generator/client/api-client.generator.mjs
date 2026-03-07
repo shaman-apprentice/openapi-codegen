@@ -1,21 +1,11 @@
 /** @import { OpenAPIV3_1 } from 'openapi-types' */
+/** @import { MethodMetadata, } from './utils/method.helper.mjs' */
 
 import { toMethodName } from './ts.helper.mjs';
+import { getParams } from './utils/parameters.helper.mjs';
+import { HTTP_METHODS, generateMethod } from './utils/method.helper.mjs';
 
 const PRIMITIVE_TS_TYPES = new Set(['string', 'number', 'boolean', 'void', 'unknown']);
-const HTTP_METHODS = /** @type {const} */ (['get', 'put', 'post', 'delete', 'patch']);
-
-/** @typedef {{ type: 'string' | 'number' }} PathParam */
-
-/**
- * @typedef {Object} MethodMetadata
- * @property {string} name
- * @property {typeof HTTP_METHODS[number]} httpMethod
- * @property {string} path
- * @property {Record<string, PathParam>} pathParams
- * @property {string} responseType
- * @property {string | undefined} requestBodyType
- */
 
 /**
  * Generates the content of an angular.client.ts file from OpenAPI paths.
@@ -49,8 +39,7 @@ export class ApiClient {
   #http = inject(HttpClient);
 
 	${methodsToGenerate.map(generateMethod).join('\n\n  ')}
-}
-`;
+}`;
 }
 
 /**
@@ -65,7 +54,7 @@ export function _buildMethodMetadata(path, method, operation) {
 		name: toMethodName(method, path),
 		httpMethod: method,
 		path,
-		pathParams: _extractPathParams(path),
+		params: getParams(path, operation),
 		responseType: _resolveResponseType(operation),
 		requestBodyType: _resolveRequestBodyType(operation),
 	};
@@ -147,39 +136,4 @@ export function _resolveSchemaType(schema) {
  */
 export function _refToTypeName(ref) {
 	return ref.split('/').pop() ?? 'unknown';
-}
-
-/**
- * Extracts path parameters from an OpenAPI path template.
- * @param {string} path
- * @returns {Record<string, PathParam>}
- */
-export function _extractPathParams(path) {
-	const params = /** @type {Record<string, PathParam>} */ ({});
-	for (const match of path.matchAll(/\{(\w+)\}/g))
-		params[match[1]] = { type: 'string' }; // todo: parse if number or string from parameter schema
-	return params;
-}
-
-/** @param {MethodMetadata} methodInfo */
-function generateMethod(methodInfo) {
-	const { name, httpMethod, path, pathParams, responseType, requestBodyType } = methodInfo;
-
-	const pathParamEntries = Object.entries(pathParams);
-	const params = pathParamEntries.map(([paramName, p]) => `${paramName}: ${p.type}`);
-	const hasBody = ['post', 'put', 'patch'].includes(httpMethod);
-	if (hasBody && requestBodyType)
-		params.push(`body: ${requestBodyType}`);
-
-	const url = pathParamEntries.length > 0
-		? '`' + path.replace(/\{(\w+)\}/g, (_, n) => `\${${n}}`) + '`'
-		: `'${path}'`;
-
-	const args = hasBody
-		? (requestBodyType ? `${url}, body` : `${url}, null`)
-		: url;
-
-	return `  ${name}(${params.join(', ')}): Observable<${responseType}> {,
-    return this.#http.${httpMethod}<${responseType}>(${args});,
-	}`;
 }

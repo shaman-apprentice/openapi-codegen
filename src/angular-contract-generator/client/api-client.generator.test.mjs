@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -11,7 +10,6 @@ import {
 	_resolveResponseType,
 	_resolveRequestBodyType,
 	_refToTypeName,
-	_extractPathParams,
 } from './api-client.generator.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -137,23 +135,6 @@ describe('_resolveRequestBodyType', () => {
 			},
 		};
 		assert.equal(_resolveRequestBodyType(op), 'Animal');
-	});
-});
-
-describe('_extractPathParams', () => {
-	test('no params', () => {
-		assert.deepEqual(_extractPathParams('/chameleon'), {});
-	});
-
-	test('single param', () => {
-		assert.deepEqual(_extractPathParams('/animals/{id}'), { id: { type: 'string' } });
-	});
-
-	test('multiple params', () => {
-		assert.deepEqual(_extractPathParams('/animals/{animalId}/food/{foodId}'), {
-			animalId: { type: 'string' },
-			foodId: { type: 'string' },
-		});
 	});
 });
 
