@@ -40,4 +40,86 @@
             <artifactId>swagger-annotations-jakarta</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>2.0.0</version>
+				<configuration>
+					<installDirectory>${java.io.tmpdir}/${node.version}</installDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install-node-and-npm</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v24.0.0</nodeVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-angular-contract</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>npx</goal>
+						</goals>
+						<configuration>
+							<arguments> -p ${project.basedir}/../../.. generate-angular-contract
+								-i ${contract.spec.file}
+								-o ${contract.angular.output.dir}
+								-n "@zoo/terrestrial-lib"
+								-a 21
+								-p ../angular-client-generator-package-resolver.mjs
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm-install-deps-angular-contract</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<workingDirectory>${contract.angular.output.dir}</workingDirectory>
+							<arguments>i</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm-build-angular-contract</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<workingDirectory>${contract.angular.output.dir}</workingDirectory>
+							<arguments>run build</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.6.0</version>
+				<executions>
+					<execution>
+						<id>add-generated-contract-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${contract.jakarta.output.dir}</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

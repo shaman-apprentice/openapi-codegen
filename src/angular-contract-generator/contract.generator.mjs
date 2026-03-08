@@ -5,6 +5,7 @@ import { scaffoldAngularProject } from './scaffold-angular-project/scaffold-angu
 import { writeFile } from 'node:fs/promises';
 import { modelContent } from './model/model.generator.mjs';
 import { apiClientContent } from './client/api-client.generator.mjs';
+import { PackageNameResolver } from './package-name.resolver.mjs';
 
 export class ContractGenerator {
 	pathToInputSpec = '';
@@ -12,17 +13,20 @@ export class ContractGenerator {
 	packageName = '';
 	majorAngularVersion = 21;
 	contractVersion = 'x.x.x';
+	packageNameResolver;
 
 	/**
 	 * @param {string} pathToInputSpec 
 	 * @param {string} pathToOutput 
-	 * @param {string} packageName 
+	 * @param {string} packageName
+	 * @param {PackageNameResolver} packageNameResolver
 	 * @param {number} [majorAngularVersion]
 	 */
-	constructor(pathToInputSpec, pathToOutput, packageName, majorAngularVersion) {
+	constructor(pathToInputSpec, pathToOutput, packageName, packageNameResolver, majorAngularVersion) {
 		this.pathToInputSpec = pathToInputSpec;
 		this.pathToOutput = pathToOutput;
 		this.packageName = packageName;
+		this.packageNameResolver = packageNameResolver;
 		if (majorAngularVersion !== undefined)
 			this.majorAngularVersion = majorAngularVersion;
 	}
@@ -44,6 +48,8 @@ export class ContractGenerator {
 			writeFile(join(this.getLibPath(), 'src', 'model.ts'), modelContent(spec.components.schemas)),
 			writeFile(join(this.getLibPath(), 'src', 'public-api.ts'), publicApiExports.join('\n') + '\n'),
 		]);
+
+		// add externals to package.json as peerDependencies
 	}
 
 	getLibPath() {

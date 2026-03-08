@@ -59,6 +59,9 @@ export function areOptionsValid(options, given) {
 	const missingRequiredOptions = Object.entries(options)
 		.filter(([key, value]) => 'required' in value && value.required && given[key] === undefined)
 		.map(([key]) => `"${key}"`);
+
+	if (!options.name && !options.packageNameResolver)
+		missingRequiredOptions.push('name|packageNameResolver');
 	
 	if (missingRequiredOptions.length > 0) {
 		console.error(`Missing options: ${missingRequiredOptions.join(', ')}`);

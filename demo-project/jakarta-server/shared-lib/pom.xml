@@ -76,6 +76,7 @@
 								-o ${contract.angular.output.dir}
 								-n "@zoo/shared-lib"
 								-a 21
+								-p ../angular-client-generator-package-resolver.mjs
 							</arguments>
 						</configuration>
 					</execution>

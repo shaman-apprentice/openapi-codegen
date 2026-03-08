@@ -5,8 +5,6 @@ import { toMethodName } from './ts.helper.mjs';
 import { getParams } from './utils/parameters.helper.mjs';
 import { HTTP_METHODS, generateMethod } from './utils/method.helper.mjs';
 
-const PRIMITIVE_TS_TYPES = new Set(['string', 'number', 'boolean', 'void', 'unknown']);
-
 /**
  * Generates the content of an angular.client.ts file from OpenAPI paths.
  * @param {Record<string, OpenAPIV3_1.PathItemObject>} paths
@@ -14,7 +12,6 @@ const PRIMITIVE_TS_TYPES = new Set(['string', 'number', 'boolean', 'void', 'unkn
  */
 export function apiClientContent(paths) {
 	const methodsToGenerate = /** @type {MethodMetadata[]} */ ([]);
-	const modelsToImport = /** @type {Set<string>} */ (new Set());
 
 	for (const [path, pathItem] of Object.entries(paths)) {
 		for (const method of HTTP_METHODS) {
@@ -23,8 +20,6 @@ export function apiClientContent(paths) {
 
 			const operation = pathItem[method];
 			methodsToGenerate.push(_buildMethodMetadata(path, method, operation));
-			for (const type of getTypesFromOperation(operation))
-				modelsToImport.add(type);
 		}
 	}
 
@@ -32,7 +27,7 @@ export function apiClientContent(paths) {
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ${[...modelsToImport].join(', ')} } from './model'; 
+import * from './model'; 
 
 @Injectable({ providedIn: 'root' })
 export class ApiClient {
@@ -58,18 +53,6 @@ export function _buildMethodMetadata(path, method, operation) {
 		responseType: _resolveResponseType(operation),
 		requestBodyType: _resolveRequestBodyType(operation),
 	};
-}
-
-/**
- * Collects model (non-primitive) TypeScript type names referenced by an operation.
- * @param {OpenAPIV3_1.OperationObject} operation
- * @returns {string[]}
- */
-function getTypesFromOperation(operation) {
-	return [_resolveResponseType(operation), _resolveRequestBodyType(operation)]
-		.filter(type => type !== undefined)
-		.map(type => type.endsWith('[]') ? type.slice(0, -2) : type)
-		.filter(type => !PRIMITIVE_TS_TYPES.has(type));
 }
 
 /**
